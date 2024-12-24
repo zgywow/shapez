@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     // 点击exitBtn来关闭窗口,并出现确认弹窗
     connect(exitBtn, &QPushButton::clicked, this, &MainWindow::onExitClicked);
 
-    //实现自定义信号时，信号只需要声明不需要实现（返回值为void），可以重载
+    //实现自定义信号时，信号只需要声明不需要实现（返回值为void），可以重载（此时要用函数指针 void* Obejct::funcsignal(参数类型) = &Object::signal）
     //槽函数就需要声明并实现（返回值也是void，写在public/private slots下）
     //可以用emit触发信号,例如
     //connect(object, &Object::signal, slot, &Slot::react);
