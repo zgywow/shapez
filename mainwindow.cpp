@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "popup.h"
+#include "Widget.h"
+#include <QToolBar>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,49 +10,110 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // //重置窗口大小
-    // resize(800, 600);
+    widget = new Widget(this); // 创建 Widget 实例并传递父级
 
-    // 设置为固定大小
-    setFixedSize(800, 600);
+    // 重置窗口大小
+    resize(1200, 675);
 
-    //设置窗口标题
-    setWindowTitle("SHAPEZ");
+    // 将 Widget 设置为 MainWindow 的中心部件
+    //setCentralWidget(widget);  // 使用 setCentralWidget 将 Widget 嵌入 MainWindow
 
-    // // 创建按钮
-    // QPushButton * btn1 = new QPushButton;
-    // // 让btn1对象依赖在myWindow中
-    // btn1->setParent(this);
-    // // 显示文本
-    // btn1->setText("Start");
+    connect(ui->newGameBtn, &QPushButton::clicked, this, &MainWindow::onNewGameBtnClicked);
+    connect(ui->continueGameBtn, &QPushButton::clicked, this, &MainWindow::onContinueGameBtnClicked);
+    connect(ui->exitBtn, &QPushButton::clicked, this, &MainWindow::onExitBtnClicked);
+    connect(ui->helpBtn, &QPushButton::clicked, this,&MainWindow::showHelpDialog);
 
-    QPushButton * startBtn = new QPushButton("Start", this);
-    startBtn->move(350,320);
-
-    QPushButton * restartBtn = new QPushButton("Restart", this);
-    restartBtn->move(350,350);
-
-
-    QPushButton * exitBtn = new QPushButton("Exit", this);
-    //移动btn2
-    exitBtn->move(350, 380);
-    // 连接函数的参数分别是：信号的接收者，发送的信号(函数地址)，信号的接收者，处理的槽函数(函数地址)
-    // 点击exitBtn来关闭窗口,并出现确认弹窗
-    connect(exitBtn, &QPushButton::clicked, this, &MainWindow::onExitClicked);
-
-    //实现自定义信号时，信号只需要声明不需要实现（返回值为void），可以重载（此时要用函数指针 void* Obejct::funcsignal(参数类型) = &Object::signal）
-    //槽函数就需要声明并实现（返回值也是void，写在public/private slots下）
-    //可以用emit触发信号,例如
-    //connect(object, &Object::signal, slot, &Slot::react);
-    //emit object->(signal);
 }
 
-void MainWindow::onExitClicked()
+void MainWindow::onNewGameBtnClicked()
 {
-    Popup *popup = new Popup(this, "Are you sure you want to exit?");
-    if (popup->exec() == QDialog::Accepted) {
-        close();  // 用户点击确认退出游戏
+    // 当点击“新游戏”按钮时，隐藏主菜单并显示游戏界面
+    setCentralWidget(widget);
+    showGameWidget();
+
+}
+
+void MainWindow::onContinueGameBtnClicked()
+{
+    // 当点击“继续游戏”按钮时，隐藏主菜单并显示游戏界面
+    setCentralWidget(widget);
+    showGameWidget();
+}
+
+void MainWindow::showHelpDialog()
+{
+    // 创建一个消息框
+    QMessageBox *msgBox = new QMessageBox(this);
+
+    // 设置消息框的标题和内容
+    msgBox->setWindowTitle("帮助");
+    msgBox->setText(
+        "欢迎来到异形工厂！\n\n"
+        "你可以通过拖拽各种工具在地图上搭建自己的工厂，完成任务，升级工厂，以赢取最后的奖杯🏆\n\n"
+        "开采器：将开采器放在矿石上可以开采对应矿石\n"
+        "传送带：开采器开采的矿石将通过传送带运送至交付中心\n"
+        "切割机：切割机只能切割圆形矿石，切割后的矿石将分为两路进行运输\n"
+        "垃圾桶：通过在传送带传送方向后面紧接垃圾桶，可以将不需要的矿石回收\n"
+        "铁铲：当你摆错或需要重新搭建工厂时，可以通过铁铲将你已经摆放的工具清除\n\n"
+        "注：\n"
+        "你可以通过键盘上的\"W\" \"A\" \"S\" \"D\"在拖拽时改变对应工具的方向\n"
+        "对于传送带，你可以通过同时按下其中两个或两个键加上\"R\"来刻画它的各种转向\n"
+        "只有输出及运送物品的方向正确，工厂才能正常运行，否则会停滞\n\n"
+        "每个新关卡开始时，你可以选择升级开采器、传送带、切割机中的一个，以提升它们的速率\n"
+        "通过消耗金币，你可以在商店中升级交付中心，提升矿石价值或者清除障碍\n\n"
+        "根据每一关的任务，你需要开采一定数量的特定矿石，通过三关后即可获胜\n\n"
+        "感谢游玩"
+        );
+
+    // 设置透明背景
+    //msgBox->setStyleSheet("QMessageBox { background-color: transparent; }");
+
+    // 设置消息框为适应内容自动调整大小
+    msgBox->adjustSize();
+
+    // 计算居中位置
+    QPoint mainWindowPos = this->mapToGlobal(this->rect().center());
+    QPoint dialogPos = mainWindowPos - QPoint(msgBox->width() / 2, msgBox->height() / 2);
+
+    // 将消息框移到居中位置
+    msgBox->move(dialogPos);
+
+    // 显示消息框
+    msgBox->exec();
+}
+
+
+// 点击退出按钮时弹出确认框
+void MainWindow::MainWindow::onExitBtnClicked()
+{
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Confirm Exit",
+                                  "确认要退出游戏吗",
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        close();  // 用户点击“是”时关闭窗口
     }
+}
+
+void MainWindow::showMainMenu()
+{
+    // 显示主菜单（隐藏游戏界面时，恢复显示）
+    ui->newGameBtn->show();
+    ui->continueGameBtn->show();
+    ui->exitBtn->show();
+}
+
+void MainWindow::showGameWidget()
+{
+    // 隐藏主菜单按钮
+    ui->newGameBtn->hide();
+    ui->continueGameBtn->hide();
+    ui->exitBtn->hide();
+
+    // 显示游戏界面（将 Widget 设置为中心部件）
+    setCentralWidget(widget);
+    widget->show();
 }
 
 MainWindow::~MainWindow()

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include "Widget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -16,10 +17,18 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    void onExitClicked();
     ~MainWindow();
+
+private slots:
+    void showHelpDialog();
+    void onNewGameBtnClicked();
+    void onContinueGameBtnClicked();
+    void onExitBtnClicked();
+    void showMainMenu();  // 显示主菜单
+    void showGameWidget();  // 显示游戏界面
 
 private:
     Ui::MainWindow *ui;
+    Widget *widget;
 };
 #endif // MAINWINDOW_H

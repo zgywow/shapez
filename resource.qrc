@@ -1,0 +1,31 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Image/background.jpg</file>
+        <file>Image/barrier.png</file>
+        <file>Image/belt_A.png</file>
+        <file>Image/belt_A_S.png</file>
+        <file>Image/belt_A_W.png</file>
+        <file>Image/belt_button.png</file>
+        <file>Image/belt_D.png</file>
+        <file>Image/belt_D_S.png</file>
+        <file>Image/belt_D_W.png</file>
+        <file>Image/belt_S.png</file>
+        <file>Image/belt_S_A.png</file>
+        <file>Image/belt_S_D.png</file>
+        <file>Image/belt_W.png</file>
+        <file>Image/belt_W_A.png</file>
+        <file>Image/belt_W_D.png</file>
+        <file>Image/hub_big.png</file>
+        <file>Image/logo_cn.png</file>
+        <file>Image/miner_A.png</file>
+        <file>Image/miner_D.png</file>
+        <file>Image/miner_S.png</file>
+        <file>Image/miner_W.png</file>
+        <file>Image/cutter_button.png</file>
+        <file>Image/settings.png</file>
+        <file>Image/shop.png</file>
+        <file>Image/spade.png</file>
+        <file>Image/trash_button.png</file>
+        <file>Image/miner_button.png</file>
+    </qresource>
+</RCC>
