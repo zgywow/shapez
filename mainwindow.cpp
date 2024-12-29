@@ -3,6 +3,7 @@
 #include "Widget.h"
 #include <QToolBar>
 #include <QMessageBox>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,13 +11,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    widget = new Widget(this); // 创建 Widget 实例并传递父级
-
     // 重置窗口大小
     resize(1200, 675);
-
-    // 将 Widget 设置为 MainWindow 的中心部件
-    //setCentralWidget(widget);  // 使用 setCentralWidget 将 Widget 嵌入 MainWindow
 
     connect(ui->newGameBtn, &QPushButton::clicked, this, &MainWindow::onNewGameBtnClicked);
     connect(ui->continueGameBtn, &QPushButton::clicked, this, &MainWindow::onContinueGameBtnClicked);
@@ -28,16 +24,32 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::onNewGameBtnClicked()
 {
     // 当点击“新游戏”按钮时，隐藏主菜单并显示游戏界面
-    setCentralWidget(widget);
-    showGameWidget();
+    // 隐藏主菜单按钮
+    ui->newGameBtn->hide();
+    ui->continueGameBtn->hide();
+    ui->exitBtn->hide();
+    ui->helpBtn->hide();
+
+    // 创建 Widget 实例并传递父级
+    widget = new Widget(this);
+    // 将 Widget 设置为 MainWindow 的中心部件
+    setCentralWidget(widget);  // 使用 setCentralWidget 将 Widget 嵌入 MainWindow
 
 }
 
 void MainWindow::onContinueGameBtnClicked()
 {
-    // 当点击“继续游戏”按钮时，隐藏主菜单并显示游戏界面
-    setCentralWidget(widget);
-    showGameWidget();
+    // 当点击“新游戏”按钮时，隐藏主菜单并显示游戏界面
+    // 隐藏主菜单按钮
+    ui->newGameBtn->hide();
+    ui->continueGameBtn->hide();
+    ui->exitBtn->hide();
+    ui->helpBtn->hide();
+
+    // 创建 Widget 实例并传递父级
+    widget = new Widget(this);
+    // 将 Widget 设置为 MainWindow 的中心部件
+    setCentralWidget(widget);  // 使用 setCentralWidget 将 Widget 嵌入 MainWindow
 }
 
 void MainWindow::showHelpDialog()
@@ -84,7 +96,7 @@ void MainWindow::showHelpDialog()
 
 
 // 点击退出按钮时弹出确认框
-void MainWindow::MainWindow::onExitBtnClicked()
+void MainWindow::onExitBtnClicked()
 {
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Confirm Exit",
@@ -102,18 +114,6 @@ void MainWindow::showMainMenu()
     ui->newGameBtn->show();
     ui->continueGameBtn->show();
     ui->exitBtn->show();
-}
-
-void MainWindow::showGameWidget()
-{
-    // 隐藏主菜单按钮
-    ui->newGameBtn->hide();
-    ui->continueGameBtn->hide();
-    ui->exitBtn->hide();
-
-    // 显示游戏界面（将 Widget 设置为中心部件）
-    setCentralWidget(widget);
-    widget->show();
 }
 
 MainWindow::~MainWindow()

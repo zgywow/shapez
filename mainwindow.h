@@ -25,7 +25,6 @@ private slots:
     void onContinueGameBtnClicked();
     void onExitBtnClicked();
     void showMainMenu();  // 显示主菜单
-    void showGameWidget();  // 显示游戏界面
 
 private:
     Ui::MainWindow *ui;
